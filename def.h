@@ -8,6 +8,7 @@
 #include <SDL_ttf.h>
 using namespace std;
 
+const int INITIAL_SPEED = 3;
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
 const char* WINDOW_TITLE = "CHESS";

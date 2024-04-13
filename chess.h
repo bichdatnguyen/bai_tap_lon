@@ -32,6 +32,23 @@ struct Chess
         graphic.playMouseClick();
     }
 
+    void scroll()
+    {
+        int scrollingOffSet = BOARD_SIZE * CELL_SIZE;
+        int speed = 2;
+        while(true) {
+            scrollingOffSet -= speed;
+            graphic.renderTexture(graphic.chessBoard, scrollingOffSet, 0);
+            graphic.presentScene();
+            SDL_Delay(5);
+            if(scrollingOffSet == 0) {
+                SDL_Delay(500);
+                break;
+            }
+        }
+        SDL_RenderClear(graphic.renderer);
+    }
+
     char beforeGame()
     {
         graphic.renderMenu();
@@ -49,7 +66,10 @@ struct Chess
                     Coordinate click;
                     pick(click);
                     if(click.x >= 3 && click.x < 6 && click.y == 4) return '1';
-                    if(click.x >= 3 && click.x < 6 && click.y == 5) return '2';
+                    if(click.x >= 3 && click.x < 6 && click.y == 5) {
+                        scroll();
+                        return '2';
+                    }
                     if(click.x >= 3 && click.x < 6 && click.y == 6) return 'e';
                     break;
                 }
@@ -107,8 +127,14 @@ struct Chess
                 if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                     Coordinate click;
                     pick(click);
-                    if(click.x >= 3 && click.x < 6 && click.y == 4) return 'w';
-                    if(click.x >= 3 && click.x < 6 && click.y == 5) return 'b';
+                    if(click.x >= 3 && click.x < 6 && click.y == 4) {
+                        scroll();
+                        return 'w';
+                    }
+                    if(click.x >= 3 && click.x < 6 && click.y == 5) {
+                        scroll();
+                        return 'b';
+                    }
                     break;
                 }
             }
@@ -183,16 +209,16 @@ struct Chess
         bool quit = false;
         while(!quit)
         {
-            char winner, colorPlayer;
+            char option, colorPlayer;
             char choice = beforeGame();
             if(choice == 'e') break;
             if(choice == '1') colorPlayer = choosePiece();
             initGame();
-            if(choice == '1') winner = inGameOnePlayer(colorPlayer);
-            else winner = inGameTwoPlayer();
-            if(winner == 'p') continue;
-            if(winner == 'e') break;
-            quit = endGame(winner);
+            if(choice == '1') option = inGameOnePlayer(colorPlayer);
+            else option = inGameTwoPlayer();
+            if(option == 'p') continue;
+            if(option == 'e') break;
+            quit = endGame(option);
         }
     }
 
